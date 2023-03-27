@@ -16,12 +16,6 @@ function divide(a, b) {
     result = a / b;
 };
 
-// function shortenResult() {
-//     if (!Number.isInteger(result)) {
-
-//     }
-// }
-
 function operate(operator, num1, num2) {
     switch (operator) {
         case "+":
@@ -53,6 +47,7 @@ const clearButton = document.querySelector(".clear");
 clearButton.addEventListener("click", reset);
 
 function reset() {
+    hasDot = false;
     bigText.classList.remove("bigtext2");
     bigText.classList.add("bigtext");
     bigDisplayValue = 0;
@@ -76,6 +71,9 @@ function deleteLast() {
             smallDisplayValue = smallDisplayValue.slice(0, -1);
         }
     } else {
+        if (bigDisplayValue.slice(-1) == ".") {
+            hasDot = false;
+        }
         bigDisplayValue = bigDisplayValue.slice(0, -1);
     }
 
@@ -92,13 +90,20 @@ numberButtons.forEach(button => button.addEventListener("click", function () {
     writeNumbers(this.textContent);
 }));
 
+let hasDot = false;
+
 function writeNumbers(num) {
     // number can't be more than 7 characters long
     if (!(bigText.textContent[6] == undefined)) {
         return;
         // you can't write multiple dots
-    } else if (num == "." && bigDisplayValue.includes(".")) {
-        return;
+    } else if (num == ".") {
+        if (hasDot == true) {
+            return;
+        } else {
+            hasDot = true;
+            bigDisplayValue = bigDisplayValue + num;
+        }
     } else if (bigDisplayValue === 0 && !(num == ".")) {
         bigDisplayValue = num;
     }
@@ -163,5 +168,70 @@ function calculateTotal() {
         bigText.textContent = bigDisplayValue;
         smallDisplayValue = "";
         smallText.textContent = smallDisplayValue;
+    }
+}
+
+document.addEventListener("keydown", useKeyboard);
+
+function useKeyboard(e) {
+    switch (e.key) {
+        case "Delete":
+            reset();
+            break;
+        case "Backspace":
+            deleteLast();
+            break;
+        case "0":
+            document.querySelector("#num0").click();
+            break;
+        case "1":
+            document.querySelector("#num1").click();
+            break;
+        case "2":
+            document.querySelector("#num2").click();
+            break;
+        case "3":
+            document.querySelector("#num3").click();
+            break;
+        case "4":
+            document.querySelector("#num4").click();
+            break;
+        case "5":
+            document.querySelector("#num5").click();
+            break;
+        case "6":
+            document.querySelector("#num6").click();
+            break;
+        case "7":
+            document.querySelector("#num7").click();
+            break;
+        case "8":
+            document.querySelector("#num8").click();
+            break;
+        case "9":
+            document.querySelector("#num9").click();
+            break;
+        case ".":
+        case ",":
+            document.querySelector("#dot").click();
+            break;
+        case "+":
+            document.querySelector("#plus").click();
+            break;
+        case "-":
+            document.querySelector("#minus").click();
+            break;
+        case "*":
+        case "x":
+            document.querySelector("#x").click();
+            break;
+        case "/":
+            event.preventDefault();
+            document.querySelector("#division").click();
+            break;
+        case "=":
+        case "Enter":
+            calculateTotal();
+            break;
     }
 }
