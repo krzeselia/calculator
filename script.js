@@ -48,23 +48,21 @@ clearButton.addEventListener("click", reset);
 
 function reset() {
     hasDot = false;
-    bigText.classList.remove("bigtext2");
-    bigText.classList.add("bigtext");
     bigDisplayValue = 0;
     bigText.textContent = bigDisplayValue;
-    smallDisplayValue = ""
+    smallDisplayValue = "";
     smallText.textContent = smallDisplayValue;
     result = "";
+
+    bigText.style.fontSize = "4.25em";
 }
 
 const backspaceButton = document.querySelector(".backspace");
 backspaceButton.addEventListener("click", deleteLast);
 
 function deleteLast() {
-    if (bigDisplayValue == "") {
+if (bigDisplayValue == "") {
         if (smallDisplayValue.slice(-2, -1) == " ") {
-            bigText.classList.remove("bigtext2");
-            bigText.classList.add("bigtext");
             bigDisplayValue = smallDisplayValue.slice(0, -2);
             smallDisplayValue = "";
         } else {
@@ -83,6 +81,8 @@ function deleteLast() {
 
     bigText.textContent = bigDisplayValue;
     smallText.textContent = smallDisplayValue;
+
+    checkTextLength();
 }
 
 const numberButtons = document.querySelectorAll(".button");
@@ -93,8 +93,8 @@ numberButtons.forEach(button => button.addEventListener("click", function () {
 let hasDot = false;
 
 function writeNumbers(num) {
-    // number can't be more than 7 characters long
-    if (!(bigText.textContent[6] == undefined)) {
+    // number can't be more than 9 characters long
+    if (!(bigText.textContent[8] == undefined)) {
         return;
         // you can't write multiple dots
     } else if (num == ".") {
@@ -123,8 +123,6 @@ function useOperators() {
 
     //if you pressed an operator for the first time
     if (smallDisplayValue == "") {
-        bigText.classList.remove("bigtext");
-        bigText.classList.add("bigtext2");
         smallDisplayValue = `${bigDisplayValue} ${operator}`;
         bigDisplayValue = "";
     }
@@ -148,6 +146,8 @@ function useOperators() {
 
     smallText.textContent = smallDisplayValue;
     bigText.textContent = bigDisplayValue;
+    hasDot = false;
+    checkTextLength();
 }
 
 const equalButton = document.querySelector(".equal");
@@ -162,13 +162,14 @@ function calculateTotal() {
     } else {
         operate(lastUsedOperator, parseFloat(smallDisplayValue.slice(0, -2)), parseFloat(bigDisplayValue));
 
-        bigText.classList.remove("bigtext2");
-        bigText.classList.add("bigtext");
         bigDisplayValue = result;
         bigText.textContent = bigDisplayValue;
         smallDisplayValue = "";
         smallText.textContent = smallDisplayValue;
+        hasDot = false;
     }
+
+    checkTextLength();
 }
 
 document.addEventListener("keydown", useKeyboard);
@@ -231,7 +232,18 @@ function useKeyboard(e) {
             break;
         case "=":
         case "Enter":
+            event.preventDefault();
             calculateTotal();
             break;
+    }
+}
+
+function checkTextLength() {
+    if (bigText.textContent.length > 13) {
+        bigText.style.fontSize = "1.8em";
+    } else if (bigText.textContent.length > 9) {
+        bigText.style.fontSize = "3em";
+    } else {
+        bigText.style.fontSize = "4.25em";
     }
 }
